@@ -8,6 +8,11 @@ return {
 		vim.g.copilot_no_tab_map = true
 		vim.b.copilot_enabled = false
 	end
-
-	-- "zbirenbaum/copilot.lua",
+	--
+	-- "zbirenbaum/copilot-cmp",
+	-- cmd = "Copilot",
+	-- event = "InsertEnter",
+	-- config = function()
+	--   require("copilot").setup({})
+	-- end,
 }
