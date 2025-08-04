@@ -234,16 +234,18 @@ vim.keymap.set('v', '<M-Down>', ":m '>+1<CR>gv=gv", { silent = true, desc = 'Mov
 vim.opt.spelllang = 'en_us'
 vim.opt.spell = true
 
-vim.keymap.set("n", "<leader>tw", function()
+vim.keymap.set('n', '<leader>tw', function()
   local enabled = vim.diagnostic.is_enabled()
   if enabled then
     vim.diagnostic.enable(false, { bufnr = 0 })
-    print("Diagnostics disabled")
+    print('Diagnostics disabled')
   else
     vim.diagnostic.enable()
-    print("Diagnostics enabled")
+    print('Diagnostics enabled')
   end
-end, { desc = "Toggle diagnostics" })
+end, { desc = 'Toggle diagnostics' })
+
+vim.opt.termguicolors = true
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
