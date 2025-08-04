@@ -219,6 +219,32 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- [[ Default Tab Width ]]
+vim.opt.shiftwidth = 2
+vim.opt.tabstop = 2
+vim.opt.expandtab = true
+vim.opt.autoindent = true
+
+-- [[ Sublime Shift Lines ]]
+vim.keymap.set('n', '<M-Up>', ':m .-2<CR>==', { silent = true, desc = 'Move line up' })
+vim.keymap.set('n', '<M-Down>', ':m .+1<CR>==', { silent = true, desc = 'Move line down' })
+vim.keymap.set('v', '<M-Up>', ":m '<-2<CR>gv=gv", { silent = true, desc = 'Move selection up' })
+vim.keymap.set('v', '<M-Down>', ":m '>+1<CR>gv=gv", { silent = true, desc = 'Move selection down' })
+
+vim.opt.spelllang = 'en_us'
+vim.opt.spell = true
+
+vim.keymap.set("n", "<leader>tw", function()
+  local enabled = vim.diagnostic.is_enabled()
+  if enabled then
+    vim.diagnostic.enable(false, { bufnr = 0 })
+    print("Diagnostics disabled")
+  else
+    vim.diagnostic.enable()
+    print("Diagnostics enabled")
+  end
+end, { desc = "Toggle diagnostics" })
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -875,69 +901,68 @@ require('lazy').setup({
       signature = { enabled = true },
     },
   },
-
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'navarasu/onedark.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      -- require('tokyonight').setup {
-      --   styles = {
-      --     comments = { italic = false }, -- Disable italics in comments
-      --   },
-      -- }
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-
-
-      require('onedark').setup  {
-         -- Main options --
-         style = 'darker', -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
-         transparent = false,  -- Show/hide background
-         term_colors = true, -- Change terminal color as per the selected theme style
-         ending_tildes = false, -- Show the end-of-buffer tildes. By default they are hidden
-         cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
-
-         -- toggle theme style ---
-         toggle_style_key = '<leader>ts', -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
-         toggle_style_list = {'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light'}, -- List of styles to toggle between
-
-         -- Change code style ---
-         -- Options are italic, bold, underline, none
-         -- You can configure multiple style with comma separated, For e.g., keywords = 'italic,bold'
-         code_style = {
-             comments = 'italic',
-             keywords = 'none',
-             functions = 'none',
-             strings = 'none',
-             variables = 'none'
-         },
-
-         -- Lualine options --
-         lualine = {
-             transparent = false, -- lualine center bar transparency
-         },
-
-         -- Custom Highlights --
-         colors = {}, -- Override default colors
-         highlights = {}, -- Override highlight groups
-
-         -- Plugins Config --
-         diagnostics = {
-             darker = true, -- darker colors for diagnostic
-             undercurl = true,   -- use undercurl instead of underline for diagnostics
-             background = true,    -- use background color for virtual text
-         },
-      }
-
-      -- vim.cmd.colorscheme 'onedark'
-    end,
-  },
+  -- { -- You can easily change to a different colorscheme.
+  --   -- Change the name of the colorscheme plugin below, and then
+  --   -- change the command in the config to whatever the name of that colorscheme is.
+  --   --
+  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+  --   'navarasu/onedark.nvim',
+  --   priority = 1000, -- Make sure to load this before all the other start plugins.
+  --   config = function()
+  --     ---@diagnostic disable-next-line: missing-fields
+  --     -- require('tokyonight').setup {
+  --     --   styles = {
+  --     --     comments = { italic = false }, -- Disable italics in comments
+  --     --   },
+  --     -- }
+  --     -- Load the colorscheme here.
+  --     -- Like many other themes, this one has different styles, and you could load
+  --     -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+  --
+  --
+  --     require('onedark').setup  {
+  --        -- Main options --
+  --        style = 'darker', -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+  --        transparent = false,  -- Show/hide background
+  --        term_colors = true, -- Change terminal color as per the selected theme style
+  --        ending_tildes = false, -- Show the end-of-buffer tildes. By default they are hidden
+  --        cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
+  --
+  --        -- toggle theme style ---
+  --        toggle_style_key = '<leader>ts', -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
+  --        toggle_style_list = {'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light'}, -- List of styles to toggle between
+  --
+  --        -- Change code style ---
+  --        -- Options are italic, bold, underline, none
+  --        -- You can configure multiple style with comma separated, For e.g., keywords = 'italic,bold'
+  --        code_style = {
+  --            comments = 'italic',
+  --            keywords = 'none',
+  --            functions = 'none',
+  --            strings = 'none',
+  --            variables = 'none'
+  --        },
+  --
+  --        -- Lualine options --
+  --        lualine = {
+  --            transparent = false, -- lualine center bar transparency
+  --        },
+  --
+  --        -- Custom Highlights --
+  --        colors = {}, -- Override default colors
+  --        highlights = {}, -- Override highlight groups
+  --
+  --        -- Plugins Config --
+  --        diagnostics = {
+  --            darker = true, -- darker colors for diagnostic
+  --            undercurl = true,   -- use undercurl instead of underline for diagnostics
+  --            background = true,    -- use background color for virtual text
+  --        },
+  --     }
+  --
+  --     -- vim.cmd.colorscheme 'onedark'
+  --   end,
+  -- },
   {
       'sainnhe/sonokai',
       lazy = false,

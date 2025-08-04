@@ -5,6 +5,7 @@ return {
     require("toggleterm").setup({
       shade_terminals = false,
       open_mapping = [[<c-\>]],
+      direction = 'vertical'
     })
 
     function _G.set_terminal_keymaps()

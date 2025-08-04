@@ -45,14 +45,15 @@ return
 					next = "<C-K>",
 				},
 			},
-			-- filetypes = {
-			-- 	markdown = true,
-			-- 	latex = true,
-			-- 	lean = true,
-			-- 	yaml = true,
-			-- 	toml = true,
-			-- 	["*"] = false
-			-- },
+			filetypes = {
+				-- markdown = true,
+				-- latex = true,
+				-- lean = true,
+				-- yaml = true,
+				-- toml = true,
+				-- ["*"] = false
+				["*"] = true
+			},
 		})
 	end,
 }
