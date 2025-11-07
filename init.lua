@@ -234,17 +234,39 @@ vim.keymap.set('v', '<M-Down>', ":m '>+1<CR>gv=gv", { silent = true, desc = 'Mov
 vim.opt.spelllang = 'en_us'
 vim.opt.spell = true
 
+vim.keymap.set('i', '<C-s>', '<C-g>u<Esc>[s1z=`]a<C-g>u', { silent = true })
+
+-- Replace undercurls with underlines and preserve the word color
+local function set_spell_underline()
+  for _, group in ipairs { 'SpellBad', 'SpellCap', 'SpellLocal', 'SpellRare' } do
+    local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
+    vim.api.nvim_set_hl(0, group, {
+      underline = true,
+      fg = hl.fg,
+      bg = hl.bg,
+      sp = hl.fg,
+    })
+  end
+end
+set_spell_underline()
+-- Reapply on colorscheme change
+vim.api.nvim_create_autocmd('ColorScheme', {
+  callback = set_spell_underline,
+})
+
+-- Add toggle for diagnostics
 vim.keymap.set('n', '<leader>tw', function()
   local enabled = vim.diagnostic.is_enabled()
   if enabled then
     vim.diagnostic.enable(false, { bufnr = 0 })
-    print('Diagnostics disabled')
+    print 'Diagnostics disabled'
   else
     vim.diagnostic.enable()
-    print('Diagnostics enabled')
+    print 'Diagnostics enabled'
   end
 end, { desc = 'Toggle diagnostics' })
 
+-- Add correct colors in tmux
 vim.opt.termguicolors = true
 
 -- [[ Install `lazy.nvim` plugin manager ]]
@@ -699,9 +721,9 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-         clangd = {"--offset-encoding=utf-16"},
+        clangd = { '--offset-encoding=utf-16' },
         -- gopls = {},
-         pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -797,7 +819,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        python = { "isort", "black" },
+        python = { 'isort', 'black' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
@@ -966,18 +988,17 @@ require('lazy').setup({
   --   end,
   -- },
   {
-      'sainnhe/sonokai',
-      lazy = false,
-      priority = 1000,
-      config = function()
-        -- Optionally configure and load the colorscheme
-        -- directly inside the plugin declaration.
-        vim.g.sonokai_enable_italic = true
-        -- vim.g.sonokai_transparent_background = 1
-        vim.cmd.colorscheme('sonokai')
-      end
+    'sainnhe/sonokai',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      -- Optionally configure and load the colorscheme
+      -- directly inside the plugin declaration.
+      vim.g.sonokai_enable_italic = true
+      -- vim.g.sonokai_transparent_background = 1
+      vim.cmd.colorscheme 'sonokai'
+    end,
   },
-
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -1092,6 +1113,15 @@ require('lazy').setup({
     },
   },
 })
+
+require('isabelle-lsp').setup {
+  vsplit = true,
+  unicode_symbols_output = true,
+  unicode_symbols_edits = true,
+}
+
+local lspconfig = require 'lspconfig'
+lspconfig.isabelle.setup {}
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
