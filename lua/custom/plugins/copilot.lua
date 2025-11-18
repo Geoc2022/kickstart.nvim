@@ -45,7 +45,7 @@ return
         },
       },
       filetypes = {
-        -- markdown = true,
+        markdown = true,
         -- latex = true,
         -- lean = true,
         -- yaml = true,
