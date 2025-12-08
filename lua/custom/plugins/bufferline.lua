@@ -19,6 +19,12 @@ return {
           hl = 'BufLineFolder',
         }
       end,
+      dirName = function()
+        return {
+          str = '',
+          hl = 'BufLineDirName',
+        }
+      end,
     }
   end,
 }
