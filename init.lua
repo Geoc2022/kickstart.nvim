@@ -330,11 +330,11 @@ require('lazy').setup({
     ---@diagnostic disable-next-line: missing-fields
     opts = {
       signs = {
-        add = { text = '+' }, ---@diagnostic disable-line: missing-fields
-        change = { text = '~' }, ---@diagnostic disable-line: missing-fields
-        delete = { text = '_' }, ---@diagnostic disable-line: missing-fields
-        topdelete = { text = '‾' }, ---@diagnostic disable-line: missing-fields
-        changedelete = { text = '~' }, ---@diagnostic disable-line: missing-fields
+        -- add = { text = '+' }, ---@diagnostic disable-line: missing-fields
+        -- change = { text = '~' }, ---@diagnostic disable-line: missing-fields
+        -- delete = { text = '_' }, ---@diagnostic disable-line: missing-fields
+        -- topdelete = { text = '‾' }, ---@diagnostic disable-line: missing-fields
+        -- changedelete = { text = '~' }, ---@diagnostic disable-line: missing-fields
       },
     },
   },
@@ -979,7 +979,7 @@ require('lazy').setup({
     branch = 'main',
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
     config = function()
-      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'python', 'rust' }
       require('nvim-treesitter').install(parsers)
       vim.api.nvim_create_autocmd('FileType', {
         callback = function(args)
@@ -1053,14 +1053,19 @@ require('lazy').setup({
   },
 })
 
-require('isabelle-lsp').setup {
-  vsplit = true,
-  unicode_symbols_output = true,
-  unicode_symbols_edits = true,
-}
+vim.opt.guicursor = 'n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20'
+vim.api.nvim_set_hl(0, 'Cursor', { reverse = true })
+vim.api.nvim_set_hl(0, 'iCursor', { reverse = true })
+vim.api.nvim_set_hl(0, 'vCursor', { reverse = true })
 
-local lspconfig = require 'lspconfig'
-lspconfig.isabelle.setup {}
+-- require('isabelle-lsp').setup {
+--   vsplit = true,
+--   unicode_symbols_output = true,
+--   unicode_symbols_edits = true,
+-- }
+--
+-- local lspconfig = require 'lspconfig'
+-- lspconfig.isabelle.setup {}
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
