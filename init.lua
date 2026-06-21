@@ -643,6 +643,7 @@ require('lazy').setup({
           --
           -- This may be unwanted, since they displace some of your code
           if client and client:supports_method('textDocument/inlayHint', event.buf) then
+            vim.lsp.inlay_hint.enable()
             map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
           end
         end,
@@ -656,7 +657,7 @@ require('lazy').setup({
         clangd = { '--offset-encoding=utf-16' },
         -- gopls = {},
         pyright = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {},
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
@@ -778,12 +779,10 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function() require('luasnip.loaders.from_vscode').lazy_load() end,
+          },
         },
         opts = {},
       },
@@ -828,7 +827,23 @@ require('lazy').setup({
       completion = {
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
-        documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        documentation = { auto_show = true, auto_show_delay_ms = 500 },
+      },
+
+      cmdline = {
+        keymap = {
+          -- recommended, as the default keymap will only show and select the next item
+          ['<Tab>'] = { 'show', 'accept' },
+        },
+        completion = {
+          menu = {
+            auto_show = function(ctx)
+              return vim.fn.getcmdtype() == ':'
+              -- enable for inputs as well, with:
+              -- or vim.fn.getcmdtype() == '@'
+            end,
+          },
+        },
       },
 
       sources = {
@@ -1053,19 +1068,8 @@ require('lazy').setup({
   },
 })
 
-vim.opt.guicursor = 'n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20'
-vim.api.nvim_set_hl(0, 'Cursor', { reverse = true })
-vim.api.nvim_set_hl(0, 'iCursor', { reverse = true })
-vim.api.nvim_set_hl(0, 'vCursor', { reverse = true })
-
--- require('isabelle-lsp').setup {
---   vsplit = true,
---   unicode_symbols_output = true,
---   unicode_symbols_edits = true,
--- }
---
--- local lspconfig = require 'lspconfig'
--- lspconfig.isabelle.setup {}
+vim.cmd 'packadd nvim.undotree'
+vim.keymap.set('n', '<leader>u', require('undotree').open)
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
